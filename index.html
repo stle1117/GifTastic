@@ -19,9 +19,6 @@
   <div class="container">
     <h1>GifTastic</h1>
 
-    <!-- Gifs will get dumped here -->
-    <div id="bands-view"></div>
-
     <form id="bands-form">
       <label for="bands-input">Add a Gif!</label>
       <input type="text" id="band-input"><br>
@@ -29,6 +26,10 @@
       <!-- Button triggers new gif to be added -->
       <input id="add-band" type="submit" value="Add a 90's Band Gif, Yo!">
     </form>
+    <!-- Buttons will get dumped here -->
+        <div id="buttons-view"></div>
+      <!-- Gifs will get dumped here -->
+        <div id="bands-view"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -38,7 +39,7 @@
       function renderButtons() {
 // Deleting the movie buttons prior to adding new movie buttons
 // (this is necessary otherwise we will have repeat buttons)
-$("#bands-view").empty();
+$("#buttons-view").empty();
 // Looping through the array of movies
 for (var i = 0; i < bands.length; i++) {
   // Then dynamicaly generating buttons for each movie in the array.
@@ -51,9 +52,10 @@ for (var i = 0; i < bands.length; i++) {
   // Providing the button's text with a value of the movie at index i
   a.text(bands[i]);
   // Adding the button to the HTML
-  $("#bands-view").append(a);
+  $("#buttons-view").append(a);
 }
 }
+renderButtons();
 // This function handles events where one button is clicked
 $("#add-band").on("click", function(event) {
 // event.preventDefault() prevents the form from trying to submit itself.
@@ -66,9 +68,10 @@ bands.push(band);
 // calling renderButtons which handles the processing of our movie array
 renderButtons();
 });
-    function displayBandInfo() {
+    //function displayBandInfo() {
         
-      $("button").on("click", function() {
+      $(document).on("click", ".band-btn", function() {
+        console.log("works");
       // Grabbing and storing the data-band property value from the button
       var bandGif = $(this).attr("data-band");
       // Constructing a queryURL using the band name
@@ -105,7 +108,7 @@ renderButtons();
         }
           })
         });
-    }
+    //}
     ;
 
     var n = 0;
@@ -128,9 +131,6 @@ function click () {
 
  $(document).on("click", "#gifImages", click);
 
-$(document).on("click", ".band-btn", displayBandInfo);
-// Calling the renderButtons function at least once to display the initial list of movies
-renderButtons();
     </script>
   </div>
 </body>
