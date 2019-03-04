@@ -34,18 +34,13 @@
     <script type="text/javascript">
       // Initial array of movies
       var bands = ["Pearl Jam", "Weezer", "Radiohead", "The Smashing Pumpkins"];
-
-
       // Function for displaying movie data
       function renderButtons() {
-
 // Deleting the movie buttons prior to adding new movie buttons
 // (this is necessary otherwise we will have repeat buttons)
 $("#bands-view").empty();
-
 // Looping through the array of movies
 for (var i = 0; i < bands.length; i++) {
-
   // Then dynamicaly generating buttons for each movie in the array.
   // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
   var a = $("<button>");
@@ -59,32 +54,25 @@ for (var i = 0; i < bands.length; i++) {
   $("#bands-view").append(a);
 }
 }
-
 // This function handles events where one button is clicked
 $("#add-band").on("click", function(event) {
 // event.preventDefault() prevents the form from trying to submit itself.
 // We're using a form so that the user can hit enter instead of clicking the button if they want
 event.preventDefault();
-
 // This line will grab the text from the input box
 var band = $("#band-input").val().trim();
 // The movie from the textbox is then added to our array
 bands.push(band);
-
 // calling renderButtons which handles the processing of our movie array
 renderButtons();
 });
-
     function displayBandInfo() {
-
         
       $("button").on("click", function() {
       // Grabbing and storing the data-band property value from the button
       var bandGif = $(this).attr("data-band");
-
       // Constructing a queryURL using the band name
       var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + bandGif + "&api_key=0suRsKPhTzKMgtWHiEET9csgwQzm0PAb&limit=10";
-
       // Performing an AJAX request with the queryURL
       $.ajax({
         url: queryURL,
@@ -93,45 +81,58 @@ renderButtons();
         // After data comes back from the request
         .then(function(response) {
           console.log(queryURL);
-
           console.log(response);
           // storing the data from the AJAX request in the results variable
           var results = response.data;
-
           // Looping through each result item
           for (var i = 0; i < results.length; i++) {
-
             // Creating and storing a div tag
             var gifsDiv = $("<div>");
-
             // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: " + results[i].rating);
-
             // Creating and storing an image tag
             var bandImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
-            bandImage.attr("src", results[i].images.fixed_height.url);
+            bandImage.attr("src" , results[i].images.fixed_height_still.url);
+            bandImage.attr("data-still" , results[i].images.fixed_height_still.url);
+            bandImage.attr("data-animate" , results[i].images.fixed_height.url);
+            bandImage.attr("data-state" , "still");
+            bandImage.attr( "id" , "gifImages");
 
-            // Appending the paragraph and image tag to the animalDiv
-            gifsDiv.append(p);
-            gifsDiv.append(bandImage);
-
-            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
+            gifsDiv.prepend(p);
+            gifsDiv.prepend(bandImage);
+            
             $("#bands-view").prepend(gifsDiv);
-          }
+        }
           })
         });
     }
     ;
 
-$(document).on("click", ".band-btn", displayBandInfo);
+    var n = 0;
 
+function click () {
+
+    var state = $(this).attr("data-state");
+    
+    if (state === "still"){
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+    }
+    else{
+      $(this).attr("src", $(this).attr("data-still"));
+      $(this).attr("data-state", "still");
+      n++;
+    console.log(n);
+    }
+ };
+
+ $(document).on("click", "#gifImages", click);
+
+$(document).on("click", ".band-btn", displayBandInfo);
 // Calling the renderButtons function at least once to display the initial list of movies
 renderButtons();
-
     </script>
   </div>
 </body>
 
 </html>
-
